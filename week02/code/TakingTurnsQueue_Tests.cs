@@ -43,7 +43,9 @@ public class TakingTurnsQueueTests
     // Scenario: Create a queue with the following people and turns: Bob (2), Tim (5), Sue (3)
     // After running 5 times, add George with 3 turns.  Run until the queue is empty.
     // Expected Result: Bob, Tim, Sue, Bob, Tim, Sue, Tim, George, Sue, Tim, George, Tim, George
-    // Defect(s) Found: 
+
+    // Defect(s) Found: I got this error Assert.AreEqual failed. Expected:<Bob>. Actual:<Sue>. So I identify that the "PersonQueue" class was implemented a Stack(LIFO) instead of a Queue(FIFO).
+    // I fixed it by changing the Enqueue method to add to the end of the list instead of the beginning.
     public void TestTakingTurnsQueue_AddPlayerMidway()
     {
         var bob = new Person("Bob", 2);
@@ -85,7 +87,12 @@ public class TakingTurnsQueueTests
     // Scenario: Create a queue with the following people and turns: Bob (2), Tim (Forever), Sue (3)
     // Run 10 times.
     // Expected Result: Bob, Tim, Sue, Bob, Tim, Sue, Tim, Sue, Tim, Tim
-    // Defect(s) Found: 
+
+    // Defect(s) Found: I got the error Assert.AreEqual failed. Expected:<Tim>. Actual:<Sue>. 
+    // I identified that the GetNextPerson method was not handling the infinite turns case correctly.
+    // People with Turns = 0 or less were being removed from the queue.
+    // I fixed the logic in GetNextPerson to first check whether Turns is not equal to 1,
+    // and then verify that it is greater than 0 before decrementing a turn from the person.
     public void TestTakingTurnsQueue_ForeverZero()
     {
         var timTurns = 0;
@@ -104,6 +111,7 @@ public class TakingTurnsQueueTests
         for (int i = 0; i < 10; i++)
         {
             var person = players.GetNextPerson();
+            Console.WriteLine($"player: {person.Name}, turns left: {person.Turns}");
             Assert.AreEqual(expectedResult[i].Name, person.Name);
         }
 
@@ -116,7 +124,7 @@ public class TakingTurnsQueueTests
     // Scenario: Create a queue with the following people and turns: Tim (Forever), Sue (3)
     // Run 10 times.
     // Expected Result: Tim, Sue, Tim, Sue, Tim, Sue, Tim, Tim, Tim, Tim
-    // Defect(s) Found: 
+    // Defect(s) Found: Not found any defect. because I handled the infinite turns case in the previous test.
     public void TestTakingTurnsQueue_ForeverNegative()
     {
         var timTurns = -3;
@@ -143,7 +151,7 @@ public class TakingTurnsQueueTests
     [TestMethod]
     // Scenario: Try to get the next person from an empty queue
     // Expected Result: Exception should be thrown with appropriate error message.
-    // Defect(s) Found: 
+    // Defect(s) Found: Not found any defect. The method already throws an exception when the queue is empty. 
     public void TestTakingTurnsQueue_Empty()
     {
         var players = new TakingTurnsQueue();

@@ -12,7 +12,13 @@ public class PriorityQueueTests
     public void TestPriorityQueue_1()
     {
         var priorityQueue = new PriorityQueue();
-        Assert.Fail("Implement the test case and then remove this.");
+        priorityQueue.Enqueue("A", 2);
+        priorityQueue.Enqueue("B", 5);
+        priorityQueue.Enqueue("C", 3);
+
+        var expected = "[A (Pri:2), B (Pri:5), C (Pri:3)]";
+        Assert.AreEqual(expected, priorityQueue.ToString());
+
     }
 
     [TestMethod]
